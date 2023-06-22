@@ -26,27 +26,47 @@
 import * as express from "express";
 import catsRouter from "./cats/cats.route";
 
-const app: express.Express = express();
+class Server {
+  public app: express.Application;
 
-const data = [1, 2, 3, 4];
+  constructor() {
+    const app: express.Application = express();
+    this.app = app;
+  }
 
-//* logging middleware
-app.use((req, res, next) => {
-  console.log(req.rawHeaders[1]);
-  console.log("This is logging MiddleWare");
-  next();
-});
+  private setRoute() {
+    this.app.use(catsRouter);
+  }
 
-//* json middleware
-app.use(express.json());
+  private setMiddleware() {
+    //* logging middleware
+    this.app.use((req, res, next) => {
+      console.log(req.rawHeaders[1]);
+      console.log("This is logging MiddleWare");
+      next();
+    });
 
-app.use(catsRouter);
+    //* json middleware
+    this.app.use(express.json());
 
-//* 404 middleware
-app.use((req, res, next) => {
-  res.send({ error: "404 not found error" });
-});
+    this.setRoute();
+    //* 404 middleware
+    this.app.use((req, res, next) => {
+      res.send({ error: "404 not found error" });
+    });
+  }
 
-app.listen(8000, () => {
-  console.log("Server is running");
-});
+  public listen() {
+    this.setMiddleware();
+    this.app.listen(8000, () => {
+      console.log("Server is running");
+    });
+  }
+}
+
+function init() {
+  const server = new Server();
+  server.listen();
+}
+
+init();
