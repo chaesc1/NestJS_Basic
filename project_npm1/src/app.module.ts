@@ -4,14 +4,24 @@ import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { CatsService } from './cats/cats.service';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import mongoose from 'mongoose';
 
 @Module({
-  imports: [CatsModule], //다른 모듈에서 만들어 진 것들은 import
+  imports: [
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
+    CatsModule,
+  ], //다른 모듈에서 만들어 진 것들은 import
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
+  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
+
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    mongoose.set('debug', this.isDev);
   }
 }
