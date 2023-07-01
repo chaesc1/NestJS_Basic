@@ -6,6 +6,7 @@ import { CatsService } from './cats/cats.service';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import mongoose from 'mongoose';
 
 @Module({
@@ -13,6 +14,7 @@ import mongoose from 'mongoose';
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     CatsModule,
+    AuthModule,
   ], //다른 모듈에서 만들어 진 것들은 import
   controllers: [AppController],
   providers: [AppService],
