@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Payload } from './jwt.payload';
 import { CatsRepository } from 'src/cats/cats.repository';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly catsRepository: CatsRepository) {
@@ -19,9 +20,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     );
 
     if (cat) {
-      return cat;
+      return cat; //request.user 로 들어가
     } else {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('접근 오류');
     }
   }
 }

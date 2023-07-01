@@ -29,7 +29,7 @@ export class CatsRepository {
     else return false;
   }
 
-  async creat(cat: CatRequestDto): Promise<Cat> {
+  async create(cat: CatRequestDto): Promise<Cat> {
     return await this.catModel.create(cat);
   }
 }
